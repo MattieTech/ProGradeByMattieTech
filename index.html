@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ProGrade | MattieTech</title>
+  <!-- Copyright © 2026 All Rights Reserved -->
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="light">
+
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="loader-inner">
+      <div class="loader-logo">
+        <span class="logo-emoji">📊</span>
+      </div>
+      <div class="loader-bar"><div class="loader-fill"></div></div>
+      <p>Loading ProGrade…
+        Developed by <strong>MattieTech</strong>
+      </p>
+    </div>
+  </div>
+
+  <!-- CANVAS for confetti -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- NAVBAR -->
+  <nav id="navbar">
+    <div class="nav-brand">
+      <span class="brand-icon">📊</span>
+      <span class="brand-name">ProGrade</span>
+    </div>
+    <div class="nav-links">
+      <a href="#calculator" class="nav-link"><span>🗒</span> Calculator</a>
+      <a href="#charts" class="nav-link"><span>📈</span> Charts</a>
+      <a href="#contact" class="nav-link"><span>✉️</span> Contact</a>
+    </div>
+    <div class="nav-actions">
+      <button id="sound-toggle" class="icon-btn" title="Toggle Sound">🔊</button>
+      <button id="theme-toggle" class="icon-btn" title="Toggle Theme">🌙</button>
+      <button class="btn-primary" onclick="scrollToSection('calculator'); switchCalcTab('cgpa')">Calculate CGPA</button>
+    </div>
+    <button class="hamburger" id="hamburger">☰</button>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#calculator" onclick="closeMobileMenu()">🗒 Calculator</a>
+    <a href="#charts" onclick="closeMobileMenu()">📈 Charts</a>
+    <a href="#contact" onclick="closeMobileMenu()">✉️ Contact</a>
+  </div>
+
+  <!-- HERO SECTION -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-badge">✨ Premium GPA &amp; CGPA Calculator</div>
+      <h1 class="hero-title">
+        Academic Clarity,<br>
+        <span class="gradient-text-orange">Beautifully</span>
+        <span class="gradient-text-blue"> Simple</span>
+      </h1>
+      <p class="hero-sub">A premium calculator for your GPA and CGPA. Track your semesters, visualize your growth, and celebrate your success.</p>
+      <div class="hero-btns">
+        <button class="btn-primary hero-cta" onclick="scrollToSection('calculator')">⚡ Start Calculating</button>
+        <button class="btn-ghost" onclick="scrollToSection('charts')">📈 View Charts</button>
+      </div>
+      <div class="scroll-hint">
+        <span>Scroll</span>
+        <span class="arrow-down">↓</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CALCULATOR SECTION -->
+  <section id="calculator">
+    <div class="section-badge">🗒 Calculator</div>
+    <h2 class="section-title">Calculate Your Grades</h2>
+    <p class="section-sub">Enter your courses, credits, and grades. We'll do the math and show you beautiful results.</p>
+
+    <div class="calc-tabs">
+      <button class="calc-tab active" id="tab-gpa" onclick="switchCalcTab('gpa')">📖 GPA Calculator</button>
+      <button class="calc-tab" id="tab-cgpa" onclick="switchCalcTab('cgpa')">🎓 CGPA Calculator</button>
+    </div>
+
+    <!-- GPA PANEL -->
+    <div class="calc-panel" id="panel-gpa">
+      <div class="panel-card">
+        <div class="panel-header">
+          <div>
+            <h3>Semester GPA</h3>
+            <p>Enter your courses for this semester</p>
+          </div>
+          <button class="btn-reset" onclick="resetGPA()">↺ Reset</button>
+        </div>
+        <div class="course-table-header">
+          <span class="col-course">COURSE</span>
+          <span class="col-credits">CREDITS</span>
+          <span class="col-grade">GRADE</span>
+          <span class="col-action"></span>
+        </div>
+        <div id="gpa-courses"></div>
+        <button class="btn-add-course" onclick="addCourse('gpa')">+ Add Course</button>
+        <div class="calc-footer">
+          <div class="live-gpa">
+            Live GPA: <strong id="live-gpa-display">0.00</strong>
+          </div>
+          <button class="btn-calculate" onclick="calculateGPA()">⚡ Calculate GPA</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CGPA PANEL -->
+    <div class="calc-panel hidden" id="panel-cgpa">
+      <div class="panel-card">
+        <div class="panel-header">
+          <div>
+            <h3>First Semester</h3>
+            <p>Enter your first semester courses</p>
+          </div>
+          <button class="btn-reset" onclick="resetCGPA()">↺ Reset</button>
+        </div>
+        <div class="course-table-header">
+          <span class="col-course">COURSE</span>
+          <span class="col-credits">CREDITS</span>
+          <span class="col-grade">GRADE</span>
+          <span class="col-action"></span>
+        </div>
+        <div id="sem1-courses"></div>
+        <button class="btn-add-course" onclick="addCourse('sem1')">+ Add Course</button>
+      </div>
+
+      <div class="panel-card" style="margin-top:1.5rem">
+        <div class="panel-header">
+          <div>
+            <h3>Second Semester</h3>
+            <p>Enter your second semester courses</p>
+          </div>
+        </div>
+        <div class="course-table-header">
+          <span class="col-course">COURSE</span>
+          <span class="col-credits">CREDITS</span>
+          <span class="col-grade">GRADE</span>
+          <span class="col-action"></span>
+        </div>
+        <div id="sem2-courses"></div>
+        <button class="btn-add-course" onclick="addCourse('sem2')">+ Add Course</button>
+        <div class="calc-footer">
+          <button class="btn-calculate" onclick="calculateCGPA()">🎓 Calculate CGPA</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULT OVERLAY -->
+  <div id="result-overlay" class="hidden">
+    <div class="result-box">
+      <button class="result-close" onclick="closeResult()">✕</button>
+      <div class="result-emoji" id="result-emoji"></div>
+      <div class="result-score" id="result-score"></div>
+      <div class="result-label" id="result-label"></div>
+      <div class="result-message" id="result-message"></div>
+      <div class="result-details" id="result-details"></div>
+      <button class="btn-primary" onclick="closeResult()">Continue</button>
+    </div>
+  </div>
+
+  <!-- FEATURES SECTION -->
+  <section id="features">
+    <div class="section-badge">⚡ Features</div>
+    <h2 class="section-title">Everything You Need</h2>
+    <p class="section-sub">Built with precision and care. Every feature designed to make your academic journey smoother.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon green">🛡</div>
+        <h4>Smart Validation</h4>
+        <p>Input validation ensures accurate calculations every time. No more manual errors.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon blue">📈</div>
+        <h4>Real-time Charts</h4>
+        <p>Beautiful, animated charts that update instantly as you calculate your grades.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon purple">💾</div>
+        <h4>Persistent History</h4>
+        <p>Your calculations are saved locally. Come back anytime to review your progress.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon orange">⚡</div>
+        <h4>Instant Results</h4>
+        <p>Get your GPA and CGPA calculated in real-time with beautiful visual feedback.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon yellow">📊</div>
+        <h4>Grade Analytics</h4>
+        <p>Deep insights into your academic performance with detailed breakdowns.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon pink">🔔</div>
+        <h4>Sound Feedback</h4>
+        <p>Immersive audio feedback that celebrates your achievements with subtle tones.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHARTS SECTION -->
+  <section id="charts">
+    <div class="section-badge">📈 Analytics</div>
+    <h2 class="section-title">Visualize Your Progress</h2>
+    <p class="section-sub">Beautiful charts to help you understand your academic performance at a glance.</p>
+
+    <div id="charts-empty" class="charts-empty">
+      <div class="charts-empty-icon">📊</div>
+      <h4>No Data Yet</h4>
+      <p>Calculate your GPA or CGPA first, and your charts will appear here automatically.</p>
+    </div>
+
+    <div id="charts-content" class="hidden">
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h4>GPA per Course</h4>
+          <canvas id="courseChart"></canvas>
+        </div>
+        <div class="chart-card">
+          <h4>Semester Comparison</h4>
+          <canvas id="semesterChart"></canvas>
+        </div>
+        <div class="chart-card wide">
+          <h4>CGPA Progress</h4>
+          <canvas id="cgpaChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT SECTION -->
+  <section id="contact">
+    <div class="section-badge">✉️ Contact</div>
+    <h2 class="section-title">Get In Touch</h2>
+    <p class="section-sub">Have questions or feedback? I'd love to hear from you.</p>
+
+    <div class="contact-grid">
+      <div class="contact-form-card">
+        <div class="form-group">
+          <label><span>👤</span> Name</label>
+          <input type="text" id="contact-name" placeholder="Your name" />
+        </div>
+        <div class="form-group">
+          <label><span>✉️</span> Email</label>
+          <input type="email" id="contact-email" placeholder="your@email.com" />
+        </div>
+        <div class="form-group">
+          <label><span>💬</span> Message</label>
+          <textarea id="contact-message" placeholder="Your message..." rows="5"></textarea>
+        </div>
+        <button class="btn-primary full-width" onclick="sendMessage()">✈ Send Message</button>
+      </div>
+
+      <div class="contact-info-card">
+        <div class="brand-info">
+          <div class="brand-info-logo">
+            <span>📊</span>
+          </div>
+          <div>
+            <h3>MattieTech</h3>
+            <p class="brand-sub">Software Engineering Student</p>
+          </div>
+        </div>
+        <p class="brand-desc">Building tools that make student life easier. ProGrade is crafted with attention to detail and a passion for great user experiences. Follow my journey and get updates on new tools.</p>
+        <div class="connect-label">CONNECT</div>
+        <div class="social-grid">
+          <a href="https://www.instagram.com/mattietechdev/" class="social-btn">📸 Instagram</a>
+          <a href="https://www.x.com/mattie_tech/" class="social-btn">🐦 Twitter</a>
+          <a href="https://www.youtube.com/@Mattie_Tech" class="social-btn">💼 LinkedIn</a>
+          <a href="https://mattie-web.vercel.app/index.html" class="social-btn">🌐 Website</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span>📊</span> <strong>ProGrade</strong>
+      </div>
+      <p>Built by a Software Engineering Student | <strong>MattieTech</strong></p>
+      <p>&copy; 2026 - All Right Reserved</p>
+      <div class="footer-links">
+        <a href="#hero">Home</a>
+        <a href="#calculator">Calculator</a>
+        <a href="#charts">Charts</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- WHATSAPP MODAL -->
+  <div id="wa-modal" class="wa-modal hidden">
+    <div class="wa-box">
+      <button class="wa-close" onclick="closeWAModal()">✕</button>
+      <div class="wa-icon">💬</div>
+      <h3>Join MattieTech Channel</h3>
+      <p>Get student tools, updates, and tips delivered to your WhatsApp. Join our community of students!</p>
+      <button class="btn-green" onclick="window.open('https://whatsapp.com/channel/0029VbBYb3g84OmFIuejPl0g', '_blank')">Join Channel →</button>
+      <button class="btn-ghost-sm" onclick="closeWAModal()">Maybe Later</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
